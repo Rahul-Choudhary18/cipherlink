@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Key Manager — SecureComm</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='key_generation.css') }}">
+</head>
+<body>
+<div class="container">
+
+  <div class="sidebar">
+    <div>
+      <div class="logo">🔐</div>
+      <h2>SecureComm</h2>
+      <a href="/dashboard" class="side-btn">⬡ Dashboard</a>
+      <a href="/friends_page" class="side-btn">👥 Friends</a>
+      <a href="/public_keys" class="side-btn">🗂 Public Keys</a>
+    </div>
+    <a href="/logout" class="logout-btn">⏻ Logout</a>
+  </div>
+
+  <div class="main-content">
+    <div class="header">
+      <h1>RSA Key Manager</h1>
+      <p>Generate and manage RSA-2048 key pairs for encryption &amp; digital signatures</p>
+    </div>
+
+    <div class="button-grid">
+      <div class="card">
+        <div class="icon">🔑</div>
+        <h3>Generate New Key Pair</h3>
+        <p>Create a new RSA-2048 public &amp; private key pair with a custom name</p>
+        <button id="generateBtn" class="action-btn">Generate Keys</button>
+      </div>
+
+      <div class="card">
+        <div class="icon">📁</div>
+        <h3>View My Keys</h3>
+        <p>Browse all generated key pairs stored in your account</p>
+        <button id="viewBtn" class="action-btn">View Keys</button>
+      </div>
+    </div>
+
+    <div class="keys-section" id="keysSection">
+      <h2>🔑 Generated Key Pairs</h2>
+      <div class="key-list">
+        {% if key_folders %}
+          {% for key in key_folders %}
+          <div class="key-card">
+            <h3>{{ key }}</h3>
+            <p>Public + Private .pem files</p>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="empty-text">No keys generated yet. Click "Generate Keys" to start.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup">
+  <div class="popup">
+    <h2>🔑 New RSA Key Pair</h2>
+    <p>Enter a name for this key pair. You'll use this name to identify it when encrypting or sharing.</p>
+    <form action="/generate_new_keys" method="POST">
+      <input type="text" name="key_name" placeholder="e.g. my-main-key" required>
+      <div class="popup-buttons">
+        <button type="submit" class="yes-btn">Generate</button>
+        <button type="button" id="closePopup" class="discard-btn">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='key_generation.js') }}"></script>
+</body>
+</html>

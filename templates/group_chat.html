@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ group_name }} - Group Chat — CipherLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+    <style>
+        .sender-name { font-size: 11px; color: var(--accent); font-weight: bold; margin-bottom: 4px; display: block; }
+        .group-attach-menu { display: none; position: absolute; bottom: 80px; left: 24px; background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); width: 320px; z-index: 100;}
+        .group-attach-menu.active { display: block; }
+        .member-list { max-height: 150px; overflow-y: auto; background: var(--bg); padding: 10px; border-radius: 6px; margin: 10px 0; border: 1px solid var(--border);}
+        .member-list label { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 8px; color: var(--text); }
+        .attach-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px; transition: transform 0.2s; color: var(--text); }
+        .attach-btn:hover { transform: scale(1.1); }
+        .action-btn-red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: bold; transition: background 0.2s; }
+        .action-btn-red:hover { background: rgba(248,113,113,0.2); }
+    </style>
+</head>
+<body>
+<div class="dashboard-container chat-container">
+
+    <div class="mobile-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/groups" style="text-decoration: none; color: var(--text); font-size: 20px;">←</a>
+            <h2 style="margin:0; font-size: 1.2rem; color: var(--text);">{{ group_name }}</h2>
+        </div>
+        <button id="sidebarToggle" class="hamburger-btn">☰</button>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="logo-section desktop-only">
+                <div class="logo">🔐</div>
+                <h2>CipherLink</h2>
+            </div>
+            
+            <div class="menu desktop-only">
+                <a href="/dashboard" class="menu-btn">
+                    <span class="icon">⬡</span> <span class="text">Dashboard</span>
+                </a>
+                <a href="/friends_page" class="menu-btn">
+                    <span class="icon">👥</span> <span class="text">Friends</span>
+                </a>
+                <a href="/groups" class="menu-btn active">
+                    <span class="icon">🌐</span> <span class="text">Groups</span>
+                </a>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3 style="color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">👥 Members ({{ all_members|length }})</h3>
+                
+                <ul style="list-style: none; padding: 0; margin-top: 10px; font-size: 14px; color: var(--text);">
+                    {% for member in all_members %}
+                        <li style="margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            {{ member }}
+                            {% if member == admin %}
+                                <span style="background: rgba(56,189,248,0.15); color: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">Admin</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {% if inviteable_friends %}
+            <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
+                <button onclick="var m = document.getElementById('addMembersMenu'); m.style.display = m.style.display === 'none' ? 'block' : 'none';" style="width: 100%; background: transparent; border: 1px dashed var(--accent); color: var(--accent); padding: 10px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; transition: background 0.2s;">
+                    + Invite Friends
+                </button>
+                
+                <div id="addMembersMenu" style="display: none; margin-top: 10px; background: var(--bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+                    <form action="/invite_group_members/{{ group_id }}" method="POST">
+                        <div style="max-height: 120px; overflow-y: auto;">
+                            {% for friend in inviteable_friends %}
+                            <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text);">
+                                <input type="checkbox" name="members" value="{{ friend }}"> {{ friend }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="action-btn" style="padding: 8px; font-size: 13px; margin-top: 8px;">Send Invitations</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            
+            <button id="themeToggle" class="theme-btn">
+                <span id="themeIcon">☀️</span> <span id="themeText">Light Mode</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-box" style="flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; width: 100%;">
+        
+        <div class="chat-header desktop-only" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: var(--surface); border-bottom: 1px solid var(--border);">
+            <h2>{{ group_name }}</h2>
+            <form action="/clear_group_chat/{{ group_id }}" method="POST" onsubmit="return confirm('Are you sure you want to clear the group chat history?');">
+                <button type="submit" class="action-btn-red">🗑 Clear Chat</button>
+            </form>
+        </div>
+
+        <div id="messages" class="messages" style="flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 10px;">
+            {% for msg in messages %}
+                {% if msg[0] == username %}
+                    <div class="message-row my-row">
+                        <div class="my-message">
+                            <span class="sender-name">You</span>
+                            {{ msg[1] }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="message-row friend-row">
+                        <div class="friend-message">
+                            <span class="sender-name">{{ msg[0] }}</span>
+                            {{ msg[1] }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% for file in shared_files %}
+                {% if file[0] == username %}
+                    <div class="message-row my-row">
+                        <div class="my-message" style="background: rgba(56,189,248,0.1); border: 1px solid var(--accent);">
+                            <span class="sender-name">You (Restricted File)</span>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 24px;">📄</span>
+                                <span style="font-family: monospace;">{{ file[1] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="message-row friend-row">
+                        <div class="friend-message" style="background: var(--card); border: 1px solid var(--border);">
+                            <span class="sender-name">{{ file[0] }} (Shared with you)</span>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 24px;">📄</span>
+                                    <span style="font-family: monospace;">{{ file[1] }}</span>
+                                </div>
+                                <a href="/download_group_file/{{ group_id }}/{{ file[1] }}" style="text-decoration: none;">
+                                    <button style="width: 100%; background: var(--accent); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                                        ⬇ Download File
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="chat-input" style="position: relative; padding: 15px 24px; background: var(--surface); border-top: 1px solid var(--border);">
+            
+            <div id="groupAttachMenu" class="group-attach-menu">
+                <h4 style="margin-bottom: 5px; color: var(--accent);">Share Restricted File</h4>
+                <p style="font-size: 12px; color: var(--muted); margin-bottom: 10px;">Who is allowed to see this file?</p>
+                
+                <form action="/upload_group_file/{{ group_id }}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" required style="width: 100%; font-size: 14px; margin-bottom: 10px; color: var(--text);">
+                    
+                    <div class="member-list">
+                        {% for member in share_members %}
+                        <label>
+                            <input type="checkbox" name="allowed_users" value="{{ member }}"> {{ member }}
+                        </label>
+                        {% else %}
+                        <p style="color: var(--muted); font-size: 13px;">You are the only member right now.</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" class="action-btn" style="padding: 10px;">Send Secure File</button>
+                </form>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+                <button type="button" class="attach-btn" onclick="document.getElementById('groupAttachMenu').classList.toggle('active');" title="Send Restricted File">
+                    📎
+                </button>
+                <input type="text" id="message" placeholder="Type message to group..." autocomplete="off" style="flex: 1; padding: 12px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; color: var(--text); outline: none;">
+                <button onclick="sendMessage()" style="padding: 12px 22px; background: linear-gradient(135deg, #0ea5e9, #6366f1); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer;">Send</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+<script>
+var socket = io();
+var CURRENT_USER = "{{ username }}";
+var GROUP_RECEIVER = "group_{{ group_id }}";
+
+function sendMessage() {
+    var messageInput = document.getElementById("message");
+    var messageText = messageInput.value.trim();
+    if(messageText === "") return;
+    socket.emit("send_message", { sender: CURRENT_USER, receiver: GROUP_RECEIVER, message: messageText });
+    messageInput.value = "";
+}
+
+socket.on("receive_message", function(data) {
+    if(data.receiver === GROUP_RECEIVER) {
+        var messages = document.getElementById("messages");
+        var row = document.createElement("div");
+
+        if(data.sender === CURRENT_USER) {
+            row.className = "message-row my-row";
+            row.innerHTML = `<div class="my-message"><span class="sender-name">You</span>${data.message}</div>`;
+        } else {
+            row.className = "message-row friend-row";
+            row.innerHTML = `<div class="friend-message"><span class="sender-name">${data.sender}</span>${data.message}</div>`;
+        }
+
+        messages.appendChild(row);
+        messages.scrollTop = messages.scrollHeight;
+    }
+});
+
+document.getElementById("message").addEventListener("keypress", function(event) {
+    if(event.key === "Enter") { sendMessage(); }
+});
+
+window.onload = function() {
+    var messages = document.getElementById("messages");
+    messages.scrollTop = messages.scrollHeight;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Received Files — SecureComm</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='decrypt.css') }}">
+</head>
+<body>
+<div class="main-container">
+
+  <a href="/decrypt_page" class="top-btn">← Back</a>
+
+  <div class="page-header">
+    <h1>📂 Received Encrypted Files</h1>
+    <p>Files downloaded from your secure chat — ready to decrypt</p>
+  </div>
+
+  {% if files %}
+  <div class="file-list">
+    {% for file in files %}
+    <div class="file-card">
+      <div class="file-info">
+        <div class="file-icon">🔐</div>
+        <div class="file-name">{{ file }}</div>
+      </div>
+      <a href="/decrypt_options">
+        <button class="download-btn">Decrypt →</button>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-box">
+    <div class="empty-icon">📂</div>
+    <h2>No Files Yet</h2>
+    <p>Download encrypted files from your chat to see them here</p>
+  </div>
+  {% endif %}
+
+</div>
+<script src="{{ url_for('static', filename='decrypt.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends & Requests — CipherLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+<div class="dashboard-container">
+  
+    <div class="mobile-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:24px;">🔐</div>
+            <h2 style="margin:0; font-size: 1.2rem; color: var(--text);">CipherLink</h2>
+        </div>
+        <button id="sidebarToggle" class="hamburger-btn">☰</button>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="logo-section desktop-only">
+                <div class="logo">🔐</div>
+                <h2>CipherLink</h2>
+            </div>
+            <div class="menu">
+                <a href="/dashboard" class="menu-btn">
+                    <span class="icon">⬡</span> <span class="text">Dashboard</span>
+                </a>
+                <a href="/friends_page" class="menu-btn active">
+                    <span class="icon">👥</span> <span class="text">Friends</span>
+                </a>
+                <a href="/groups" class="menu-btn">
+                    <span class="icon">🌐</span> <span class="text">Groups</span>
+                </a>
+                <a href="/search_page" class="menu-btn">
+                    <span class="icon">🔍</span> <span class="text">Search People</span>
+                </a>
+            </div>
+            <button id="themeToggle" class="theme-btn">
+                <span id="themeIcon">☀️</span> <span id="themeText">Light Mode</span>
+            </button>
+        </div>
+        <a href="/logout" class="logout-btn">⏻ Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1>My <span>Friends</span></h1>
+        </div>
+
+        <div style="margin-bottom: 40px;">
+            <h2 style="margin-bottom: 15px; font-size: 1.2rem;">Pending Friend Requests</h2>
+            <div class="dashboard-grid">
+                {% for req in requests %}
+                <div class="card" style="padding: 20px;">
+                    <h3>{{ req[0] }}</h3>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <a href="/accept/{{ req[0] }}" style="background: var(--green); color: #fff; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Accept</a>
+                        <a href="/reject/{{ req[0] }}" style="background: var(--red); color: #fff; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Reject</a>
+                    </div>
+                </div>
+                {% else %}
+                <p style="color: var(--muted);">No pending friend requests.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="margin-bottom: 40px;">
+            <h2 style="margin-bottom: 15px; font-size: 1.2rem; color: var(--accent);">Group Invitations</h2>
+            <div class="dashboard-grid">
+                {% for greq in group_requests %}
+                <div class="card" style="padding: 20px; border-color: var(--accent);">
+                    <h3 style="color: var(--accent);">{{ greq[1] }}</h3>
+                    <p style="font-size: 13px; color: var(--muted);">Invited by: <strong>{{ greq[2] }}</strong></p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <a href="/accept_group/{{ greq[0] }}" style="background: var(--accent); color: #fff; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Join Group</a>
+                        <a href="/reject_group/{{ greq[0] }}" style="background: transparent; border: 1px solid var(--red); color: var(--red); padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Decline</a>
+                    </div>
+                </div>
+                {% else %}
+                <p style="color: var(--muted);">No pending group invitations.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <h2 style="margin-bottom: 15px; font-size: 1.2rem;">My Friends</h2>
+            <div class="dashboard-grid">
+                {% for friend in friends %}
+                <div class="card" style="padding: 20px;">
+                    <h3>{{ friend }}</h3>
+                    <a href="/chat/{{ friend }}" style="display: inline-block; margin-top: 15px; background: rgba(56,189,248,0.1); color: var(--accent); border: 1px solid var(--accent); padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Open Chat</a>
+                </div>
+                {% else %}
+                <p style="color: var(--muted);">You haven't added any friends yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>

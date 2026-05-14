@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Groups — CipherLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <style>
+        .group-card { text-decoration: none; display: block; color: inherit; }
+        .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; max-height: 150px; overflow-y: auto; background: var(--bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+        .friend-checkbox { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 14px; }
+        @media (max-width: 768px) { .checkbox-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+
+    <div class="mobile-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:24px;">🔐</div>
+            <h2 style="margin:0; font-size: 1.2rem; color: var(--text);">CipherLink</h2>
+        </div>
+        <button id="sidebarToggle" class="hamburger-btn">☰</button>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="logo-section desktop-only">
+                <div class="logo">🔐</div>
+                <h2>CipherLink</h2>
+            </div>
+            <div class="menu">
+                <a href="/dashboard" class="menu-btn">
+                    <span class="icon">⬡</span> <span class="text">Dashboard</span>
+                </a>
+                <a href="/friends_page" class="menu-btn">
+                    <span class="icon">👥</span> <span class="text">Friends</span>
+                </a>
+                <a href="/groups" class="menu-btn active">
+                    <span class="icon">🌐</span> <span class="text">Groups</span>
+                </a>
+                <a href="/search_page" class="menu-btn">
+                    <span class="icon">🔍</span> <span class="text">Search People</span>
+                </a>
+            </div>
+            <button id="themeToggle" class="theme-btn">
+                <span id="themeIcon">☀️</span> <span id="themeText">Light Mode</span>
+            </button>
+        </div>
+        <a href="/logout" class="logout-btn">⏻ Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1>Secure <span>Groups</span></h1>
+            <p style="color: var(--muted); margin-top: 5px;">Create groups and chat securely.</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 30px;">
+            <h3 style="color: var(--accent); margin-bottom: 15px;">➕ Create a New Group</h3>
+            <form action="/create_group" method="POST">
+                <input type="text" name="group_name" placeholder="Enter Group Name" required style="margin-bottom: 10px;">
+                
+                <p style="margin-top: 10px; font-weight: bold;">Select Friends to Invite:</p>
+                <div class="checkbox-grid">
+                    {% for friend in friends %}
+                    <label class="friend-checkbox">
+                        <input type="checkbox" name="members" value="{{ friend }}"> {{ friend }}
+                    </label>
+                    {% else %}
+                    <p style="color: var(--muted); grid-column: 1 / -1;">You have no friends to add.</p>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="action-btn" style="margin-top: 10px;">Create Group & Send Invites</button>
+            </form>
+        </div>
+
+        <h2 style="margin-bottom: 15px; font-size: 1.2rem;">My Groups</h2>
+        <div class="dashboard-grid">
+            {% for group in groups %}
+            <a href="/group/{{ group[0] }}" class="card group-card">
+                <div style="font-size: 32px; margin-bottom: 15px;">🌐</div>
+                <h3>{{ group[1] }}</h3>
+                <p style="color: var(--muted); font-size: 13px; margin-bottom: 10px;">Admin: {{ group[2] }}</p>
+                <span style="color: var(--accent); font-weight: bold;">Open Chat →</span>
+            </a>
+            {% else %}
+            <p style="color: var(--muted);">You are not in any groups.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>

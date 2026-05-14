@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — CipherLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+<div class="dashboard-container">
+
+    <div class="mobile-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:24px;">🔐</div>
+            <h2 style="margin:0; font-size: 1.2rem; color: var(--text);">CipherLink</h2>
+        </div>
+        <button id="sidebarToggle" class="hamburger-btn">☰</button>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="logo-section desktop-only">
+                <div class="logo">🔐</div>
+                <h2>CipherLink</h2>
+            </div>
+            
+            <div class="menu">
+                <a href="/dashboard" class="menu-btn active">
+                    <span class="icon">⬡</span> <span class="text">Dashboard</span>
+                </a>
+                <a href="/friends_page" class="menu-btn">
+                    <span class="icon">👥</span> <span class="text">Friends</span>
+                </a>
+                <a href="/groups" class="menu-btn">
+                    <span class="icon">🌐</span> <span class="text">Groups</span>
+                </a>
+                <a href="/search_page" class="menu-btn">
+                    <span class="icon">🔍</span> <span class="text">Search People</span>
+                </a>
+            </div>
+            
+            <button id="themeToggle" class="theme-btn">
+                <span id="themeIcon">☀️</span> <span id="themeText">Light Mode</span>
+            </button>
+        </div>
+        
+        <a href="/logout" class="logout-btn">⏻ Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1>Welcome, <span>{{ username }}</span></h1>
+            <p style="color: var(--muted); margin-top: 5px;">Your encrypted dashboard is ready.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <a href="/friends_page" style="text-decoration: none; color: inherit;">
+                <div class="card">
+                    <div style="font-size: 32px; margin-bottom: 15px;">👥</div>
+                    <h3>My Friends</h3>
+                    <p style="color: var(--muted); font-size: 14px; margin-top: 5px;">Manage your secure contacts.</p>
+                </div>
+            </a>
+
+            <a href="/groups" style="text-decoration: none; color: inherit;">
+                <div class="card">
+                    <div style="font-size: 32px; margin-bottom: 15px;">🌐</div>
+                    <h3>My Groups</h3>
+                    <p style="color: var(--muted); font-size: 14px; margin-top: 5px;">Chat and share files securely.</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>

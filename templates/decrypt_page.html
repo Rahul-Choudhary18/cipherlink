@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decryption Center — SecureComm</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='decrypt.css') }}">
+</head>
+<body>
+<div class="main-container">
+
+  <div class="page-header">
+    <h1>🔓 Decryption Center</h1>
+    <p>Manage and decrypt encrypted files received from your contacts</p>
+  </div>
+
+  <div class="card-container">
+
+    <a href="/received_files" class="card">
+      <div class="card-icon">📂</div>
+      <h2>Received Files</h2>
+      <p>View encrypted .secure files you've received and downloaded from friends</p>
+    </a>
+
+    <a href="/decrypt_options" class="card">
+      <div class="card-icon">🔓</div>
+      <h2>Start Decryption</h2>
+      <p>Select your private key and the sender's public key to decrypt and verify files</p>
+    </a>
+
+  </div>
+
+  <br>
+  <a href="/dashboard" class="top-btn">← Back to Dashboard</a>
+
+</div>
+<script src="{{ url_for('static', filename='decrypt.js') }}"></script>
+</body>
+</html>

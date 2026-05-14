@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encrypt File — SecureComm</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='encrypted_files.css') }}">
+</head>
+<body>
+<div class="public-wrapper">
+
+  <div class="sidebar">
+    <div class="logo-section">
+      <div class="logo">🔐</div>
+      <h2>SecureComm</h2>
+    </div>
+    <a href="/dashboard">
+      <button class="menu-btn">⬡ Dashboard</button>
+    </a>
+    <a href="/public_keys">
+      <button class="menu-btn">🗂 Public Keys</button>
+    </a>
+    <a href="/friends_page">
+      <button class="menu-btn">👥 Friends</button>
+    </a>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <h1>Encrypt a File</h1>
+      <p>Hybrid RSA-2048 + AES-128-EAX encryption with digital signature</p>
+    </div>
+
+    <form action="/encrypt_file" method="POST" enctype="multipart/form-data" class="encrypt-form">
+
+      <div>
+        <label class="form-label">📂 Select File to Encrypt</label>
+        <input type="file" name="file" required>
+      </div>
+
+      <div>
+        <label class="form-label">🔑 Recipient's Public Key (Encrypts the AES key)</label>
+        <select name="public_key" id="public_key_select" required>
+          <option value="">— Choose Friend's Public Key —</option>
+          {% for key in public_keys %}
+            <option value="{{ key['key'] }}" data-friend="{{ key['friend'] }}">
+              {{ key['friend'] }} › {{ key['key'] }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <input type="hidden" name="friend" id="friend_input">
+
+      <div>
+        <label class="form-label">🛡 Your Private Key (Signs the file)</label>
+        <select name="private_key" required>
+          <option value="">— Choose Your Private Key —</option>
+          {% for key in private_keys %}
+            <option value="{{ key }}">{{ key }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit">🔒 Encrypt & Save File</button>
+    </form>
+
+    {% if encrypted_files %}
+    <p class="section-title">🗃 Your Encrypted Files</p>
+    <div class="keys-container">
+      {% for file in encrypted_files %}
+      <div class="key-card">
+        <div class="file-icon-box">🔐</div>
+        <div class="friend-name">{{ file }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+const sel = document.getElementById("public_key_select");
+sel.addEventListener("change", function() {
+  const opt = sel.options[sel.selectedIndex];
+  document.getElementById("friend_input").value = opt.getAttribute("data-friend") || "";
+});
+</script>
+<script src="{{ url_for('static', filename='encrypted_files.js') }}"></script>
+</body>
+</html>

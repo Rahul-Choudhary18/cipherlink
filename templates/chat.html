@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ friend }} — CipherLink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+    <style>
+        /* Small styling addition for the clean attach button */
+        .chat-input-wrapper { display: flex; align-items: center; gap: 10px; width: 100%; }
+        .attach-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px; transition: transform 0.2s; }
+        .attach-btn:hover { transform: scale(1.1); }
+        .action-btn-red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: bold; transition: background 0.2s; }
+        .action-btn-red:hover { background: rgba(248,113,113,0.2); }
+    </style>
+</head>
+<body>
+<div class="dashboard-container chat-container">
+
+    <div class="mobile-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/friends_page" style="text-decoration: none; color: var(--text); font-size: 20px;">←</a>
+            <h2 style="margin:0; font-size: 1.2rem; color: var(--text);">{{ friend }}</h2>
+        </div>
+        <button id="sidebarToggle" class="hamburger-btn">☰</button>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="logo-section desktop-only">
+                <div class="logo">🔐</div>
+                <h2>CipherLink</h2>
+            </div>
+            
+            <div class="menu desktop-only">
+                <a href="/dashboard" class="menu-btn">
+                    <span class="icon">⬡</span> <span class="text">Dashboard</span>
+                </a>
+                <a href="/friends_page" class="menu-btn active">
+                    <span class="icon">👥</span> <span class="text">Friends</span>
+                </a>
+                <a href="/groups" class="menu-btn">
+                    <span class="icon">🌐</span> <span class="text">Groups</span>
+                </a>
+            </div>
+
+            <div style="margin-top: 30px;" class="desktop-only">
+                <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 10px;">Chatting with</h3>
+                <div class="friend-name" style="background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); color: var(--text); padding: 10px 14px; border-radius: 10px; font-size: 15px; font-weight: 600;">{{ friend }}</div>
+                <p style="color: var(--muted); font-size: 12px; margin-top: 20px; text-align: center;">
+                    🔒 End-to-End Encrypted
+                </p>
+            </div>
+            
+            <button id="themeToggle" class="theme-btn">
+                <span id="themeIcon">☀️</span> <span id="themeText">Light Mode</span>
+            </button>
+        </div>
+        
+        <a href="/logout" class="logout-btn">⏻ Logout</a>
+    </div>
+
+    <div class="chat-box" style="flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; width: 100%;">
+        <div class="chat-header desktop-only" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: var(--surface); border-bottom: 1px solid var(--border);">
+            <h2>Chat with {{ friend }}</h2>
+            <form action="/clear_chat/{{ friend }}" method="POST" onsubmit="return confirm('Clear this chat?');">
+                <button type="submit" class="action-btn-red">🗑 Clear</button>
+            </form>
+        </div>
+
+        <div id="messages" class="messages" style="flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 10px;">
+            {% for msg in messages %}
+                {% if msg[0] == username %}
+                    <div class="message-row my-row">
+                        <div class="my-message">{{ msg[2] }}</div>
+                    </div>
+                {% else %}
+                    <div class="message-row friend-row">
+                        <div class="friend-message">{{ msg[2] }}</div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% for file in shared_files %}
+                {% if file[0] == username %}
+                    <div class="message-row my-row">
+                        <div class="my-message" style="background: rgba(56,189,248,0.1); border: 1px solid var(--accent);">
+                            <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 24px;">📄</span>
+                                    <span style="color: var(--accent); font-family: monospace;">{{ file[1] if file|length > 1 else file[0] }}</span>
+                                </div>
+                                <span style="font-size: 11px; opacity: 0.8; margin-top: 5px;">Sent securely</span>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="message-row friend-row">
+                        <div class="friend-message" style="background: var(--card); border: 1px solid var(--border);">
+                            <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 24px;">📄</span>
+                                    <span style="font-family: monospace;">{{ file[1] if file|length > 1 else file[0] }}</span>
+                                </div>
+                                <a href="/download_chat_file/{{ file[1] if file|length > 1 else file[0] }}" style="text-decoration: none; width: 100%;">
+                                    <button class="file-bubble-btn" style="width: 100%; background: var(--accent); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                                        ⬇ Download & Decrypt
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="chat-input" style="display: flex; align-items: center; gap: 10px; padding: 15px 24px; background: var(--surface); border-top: 1px solid var(--border);">
+            
+            <form id="fileUploadForm" action="/upload_chat_file/{{ friend }}" method="POST" enctype="multipart/form-data" style="display: none;">
+                <input type="file" name="file" id="fileInput" onchange="document.getElementById('fileUploadForm').submit();">
+            </form>
+
+            <button type="button" class="attach-btn" onclick="document.getElementById('fileInput').click();" title="Send File">
+                📎
+            </button>
+
+            <input type="text" id="message" placeholder="Type message..." autocomplete="off" style="flex: 1; padding: 12px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; color: var(--text); outline: none;">
+            <button onclick="sendMessage()" style="padding: 12px 22px; background: linear-gradient(135deg, #0ea5e9, #6366f1); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer;">Send</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+<script>
+var socket = io();
+var CURRENT_USER = "{{ username }}";
+var FRIEND = "{{ friend }}";
+
+function sendMessage() {
+    var messageInput = document.getElementById("message");
+    var messageText = messageInput.value.trim();
+
+    if(messageText === "") return;
+
+    socket.emit("send_message", {
+        sender: CURRENT_USER,
+        receiver: FRIEND,
+        message: messageText
+    });
+
+    messageInput.value = "";
+}
+
+socket.on("receive_message", function(data) {
+    if((data.sender === CURRENT_USER && data.receiver === FRIEND) || (data.sender === FRIEND && data.receiver === CURRENT_USER)) {
+        var messages = document.getElementById("messages");
+        var row = document.createElement("div");
+
+        if(data.sender === CURRENT_USER) {
+            row.className = "message-row my-row";
+            row.innerHTML = `<div class="my-message">${data.message}</div>`;
+        } else {
+            row.className = "message-row friend-row";
+            row.innerHTML = `<div class="friend-message">${data.message}</div>`;
+        }
+
+        messages.appendChild(row);
+        messages.scrollTop = messages.scrollHeight;
+    }
+});
+
+document.getElementById("message").addEventListener("keypress", function(event) {
+    if(event.key === "Enter") {
+        sendMessage();
+    }
+});
+
+window.onload = function() {
+    var messages = document.getElementById("messages");
+    messages.scrollTop = messages.scrollHeight;
+}
+</script>
+</body>
+</html>
