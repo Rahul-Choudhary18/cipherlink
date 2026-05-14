@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #060b14; --surface: #0d1626; --card: #111d30;
+  --border: rgba(56,189,248,0.12); --accent: #38bdf8; --accent2: #818cf8;
+  --green: #34d399; --text: #e2e8f0; --muted: #64748b; --sidebar-w: 240px;
+}
+
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.public-wrapper { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: var(--sidebar-w); background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 28px 20px;
+  display: flex; flex-direction: column; gap: 20px;
+  position: fixed; top: 0; left: 0; height: 100vh;
+}
+
+.logo-section { text-align: center; }
+.logo { font-size: 42px; margin-bottom: 10px; }
+.logo-section h2 { font-family: 'Space Mono', monospace; font-size: 1rem; color: var(--accent); }
+
+.menu-btn {
+  width: 100%; padding: 13px 14px;
+  background: rgba(56,189,248,0.08);
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 10px; color: var(--accent);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.menu-btn:hover { background: rgba(56,189,248,0.15); }
+
+.main-content { flex: 1; margin-left: var(--sidebar-w); padding: 40px; }
+
+.top-bar { margin-bottom: 32px; }
+.top-bar h1 { font-family: 'Space Mono', monospace; font-size: 1.6rem; margin-bottom: 6px; }
+.top-bar p  { color: var(--muted); font-size: 14px; }
+
+/* ENCRYPT FORM */
+.encrypt-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px; padding: 28px;
+  display: flex; flex-direction: column; gap: 16px;
+  max-width: 600px; margin-bottom: 40px;
+}
+
+.form-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; display: block; }
+
+.encrypt-form input[type="file"] {
+  padding: 14px;
+  background: var(--surface);
+  border: 1px dashed rgba(56,189,248,0.3);
+  border-radius: 10px;
+  color: var(--muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; cursor: pointer; transition: border-color 0.2s;
+}
+.encrypt-form input[type="file"]:hover { border-color: var(--accent); }
+
+.encrypt-form select {
+  padding: 13px 14px;
+  background: var(--surface);
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 10px; color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; outline: none; transition: border-color 0.2s;
+}
+.encrypt-form select:focus { border-color: var(--accent); }
+
+.encrypt-form button {
+  padding: 14px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border: none; border-radius: 10px; color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  margin-top: 4px;
+}
+.encrypt-form button:hover { box-shadow: 0 6px 20px rgba(56,189,248,0.3); transform: translateY(-1px); }
+
+/* FILE LIST */
+.section-title { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+
+.keys-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.key-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 20px;
+  display: flex; align-items: center; gap: 14px;
+  transition: all 0.2s; animation: fadeIn 0.4s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.key-card:hover { border-color: rgba(56,189,248,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+
+.file-icon-box {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: rgba(52,211,153,0.1);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.friend-name { font-size: 14px; font-weight: 500; color: var(--text); word-break: break-all; }
+
+@media(max-width:768px) {
+  .sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+}

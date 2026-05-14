@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #060b14; --surface: #0d1626; --card: #111d30;
+  --border: rgba(56,189,248,0.12); --accent: #38bdf8;
+  --green: #34d399; --red: #f87171;
+  --text: #e2e8f0; --muted: #64748b; --sidebar-w: 240px;
+}
+
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+.container { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: var(--sidebar-w); background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 28px 20px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: fixed; top: 0; left: 0; height: 100vh;
+}
+
+.logo {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin: 0 auto 12px;
+}
+
+.sidebar h2 { font-family: 'Space Mono', monospace; font-size: 1rem; text-align: center; margin-bottom: 36px; }
+
+.side-btn, .logout-btn {
+  display: block; text-decoration: none;
+  padding: 12px 14px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; margin-bottom: 8px; transition: all 0.2s;
+}
+.side-btn { background: transparent; color: var(--muted); border: 1px solid transparent; }
+.side-btn:hover { background: rgba(56,189,248,0.08); color: var(--text); border-color: var(--border); }
+.logout-btn { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); text-align: center; }
+.logout-btn:hover { background: rgba(248,113,113,0.18); }
+
+.main-content { flex: 1; margin-left: var(--sidebar-w); padding: 40px; }
+
+.header { margin-bottom: 36px; }
+.header h1 { font-family: 'Space Mono', monospace; font-size: 1.6rem; margin-bottom: 6px; }
+.header p  { color: var(--muted); font-size: 14px; }
+
+.search-box {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px; margin-bottom: 24px;
+}
+
+.search-box form { display: flex; gap: 12px; }
+
+.search-box input {
+  flex: 1; padding: 13px 16px;
+  background: var(--surface);
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 10px; color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; outline: none; transition: border-color 0.2s;
+}
+.search-box input:focus { border-color: var(--accent); }
+.search-box input::placeholder { color: var(--muted); }
+
+.search-box button {
+  padding: 13px 24px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border: none; border-radius: 10px; color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.search-box button:hover { box-shadow: 0 0 15px rgba(56,189,248,0.3); }
+
+.result-card {
+  background: var(--card); border: 1px solid rgba(52,211,153,0.2);
+  border-radius: 14px; padding: 22px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  animation: fadeIn 0.4s ease; margin-bottom: 16px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-card h2 { font-size: 1rem; color: var(--text); margin-bottom: 4px; }
+.result-card p  { font-size: 13px; color: var(--muted); }
+
+.send-btn {
+  text-decoration: none; padding: 10px 18px;
+  background: rgba(52,211,153,0.1);
+  border: 1px solid rgba(52,211,153,0.25);
+  border-radius: 8px; color: var(--green);
+  font-size: 13px; font-weight: 600; transition: all 0.2s;
+}
+.send-btn:hover { background: rgba(52,211,153,0.18); }
+
+.error-box {
+  background: rgba(248,113,113,0.07);
+  border: 1px solid rgba(248,113,113,0.2);
+  border-radius: 12px; padding: 16px 20px;
+  color: var(--red); font-size: 14px;
+  animation: fadeIn 0.4s ease;
+}
+
+@media(max-width:768px) {
+  .sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+}

@@ -1,0 +1,181 @@
+/* Groups Specific Styles */
+
+.section-title {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    color: var(--text);
+}
+
+.create-group-card {
+    background: var(--card);
+    border: 1px dashed var(--accent);
+    border-radius: 18px;
+    padding: 30px;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+.create-group-card h3 {
+    margin-bottom: 15px;
+    color: var(--accent);
+}
+
+.group-form {
+    display: flex;
+    gap: 15px;
+}
+
+.group-form input {
+    flex: 1;
+    padding: 12px 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+}
+
+.group-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.group-form .action-btn {
+    width: auto;
+    margin-top: 0;
+    padding: 12px 25px;
+}
+
+/* Group Workspace Grid */
+.group-workspace {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+@media(max-width: 1000px) {
+    .group-workspace {
+        grid-template-columns: 1fr;
+    }
+}
+
+.upload-section {
+    text-align: left;
+}
+
+.upload-section p {
+    margin-bottom: 20px;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.file-input-wrapper input[type="file"] {
+    width: 100%;
+    padding: 15px;
+    background: rgba(56,189,248,0.05);
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.access-control label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.access-control input {
+    width: 100%;
+    padding: 12px 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+}
+
+.access-control small {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* File List styling */
+.files-section h2 {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    color: var(--text);
+}
+
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.file-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.file-item:hover {
+    transform: translateX(5px);
+    border-color: var(--accent);
+}
+
+.file-info h4 {
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.file-info p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.file-info span {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.download-btn {
+    padding: 8px 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.download-btn:hover {
+    background: #0284c7;
+}
+
+.empty-state {
+    padding: 40px;
+    text-align: center;
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+}

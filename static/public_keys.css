@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #060b14; --surface: #0d1626; --card: #111d30;
+  --border: rgba(56,189,248,0.12); --accent: #38bdf8; --accent2: #818cf8;
+  --text: #e2e8f0; --muted: #64748b; --sidebar-w: 240px;
+}
+
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.public-wrapper { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: var(--sidebar-w); background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 28px 20px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: fixed; top: 0; left: 0; height: 100vh;
+}
+
+.logo-section { text-align: center; }
+.logo { font-size: 42px; margin-bottom: 10px; }
+.logo-section h2 { font-family: 'Space Mono', monospace; font-size: 1rem; color: var(--accent); margin-bottom: 36px; }
+
+.menu { display: flex; flex-direction: column; gap: 6px; }
+.menu-link { text-decoration: none; }
+
+.menu-btn {
+  width: 100%; padding: 12px 14px;
+  background: transparent; border: 1px solid transparent;
+  border-radius: 10px; color: var(--muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; cursor: pointer; text-align: left; transition: all 0.2s;
+}
+.menu-btn:hover  { background: rgba(56,189,248,0.08); color: var(--text); border-color: var(--border); }
+.menu-btn.active { background: rgba(56,189,248,0.12); color: var(--accent); border-color: rgba(56,189,248,0.25); }
+
+.logout-link { text-decoration: none; }
+.logout-btn {
+  width: 100%; padding: 12px;
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.2);
+  border-radius: 10px; color: #f87171;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.logout-btn:hover { background: rgba(248,113,113,0.18); }
+
+.main-content { flex: 1; margin-left: var(--sidebar-w); padding: 40px; }
+
+.top-bar { margin-bottom: 28px; }
+.top-bar h1 { font-family: 'Space Mono', monospace; font-size: 1.6rem; margin-bottom: 6px; }
+.top-bar p  { color: var(--muted); font-size: 14px; }
+
+.search-section { margin-bottom: 28px; }
+
+.search-input {
+  width: 100%; max-width: 360px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px; color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; outline: none; transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--muted); }
+
+.keys-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.key-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
+  transition: all 0.2s; animation: fadeIn 0.4s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.key-card:hover { border-color: rgba(56,189,248,0.3); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+.friend-info { display: flex; align-items: center; gap: 14px; }
+
+.friend-icon {
+  width: 48px; height: 48px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(129,140,248,0.15));
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+
+.friend-name { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.key-file    { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+.empty-box {
+  grid-column: 1 / -1;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 18px; padding: 60px;
+  text-align: center;
+}
+.empty-icon { font-size: 52px; margin-bottom: 16px; }
+.empty-box h2 { font-size: 1.2rem; margin-bottom: 8px; }
+.empty-box p  { color: var(--muted); font-size: 14px; }
+
+@media(max-width:768px) {
+  .sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+}
